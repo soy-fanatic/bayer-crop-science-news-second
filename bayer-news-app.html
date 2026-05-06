@@ -1,0 +1,346 @@
+import React, { useState, useEffect } from 'react';
+
+function BayerCropScienceNewsApp() {
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('Bayer Crop Science');
+  const [timeFilter, setTimeFilter] = useState('m1');
+
+  // Mock news data based on recent search results
+  const mockArticles = [
+    {
+      id: 1,
+      title: "Global Sorghum Conference Brings Leaders Together for Advancement",
+      snippet: "Jessica Christiansen – Communication Head at Bayer Crop Science speaks at the conference about agricultural innovation and sustainability initiatives.",
+      url: "https://www.depts.ttu.edu/agriculturalsciences/news/posts/2026/04/pss-global-sorghum-conference-brings-leaders-together-for-advancement.php",
+      date: "2026-04-29",
+      source: "Texas Tech University"
+    },
+    {
+      id: 2,
+      title: "Zeledón Selected to Lead Texas A&M AgriLife Center at Corpus Christi",
+      snippet: "Career highlights include work with major agricultural companies including Bayer Crop Science, BASF and Monsanto in crop protection and biotechnology.",
+      url: "https://agrilifetoday.tamu.edu/2026/05/05/zeledon-selected-to-lead-texas-am-agrilife-center-at-corpus-christi/",
+      date: "2026-05-05",
+      source: "Texas A&M AgriLife"
+    },
+    {
+      id: 3,
+      title: "Alliance of Bioversity International and CIAT Strategic Collaboration",
+      snippet: "Livia Torres, Corn Product Development Scientist at Bayer's Crop Science division, discusses new collaboration in agricultural research and development.",
+      url: "https://www.facebook.com/BiovIntCIAT.eng/posts/1410298284474152/",
+      date: "2026-04-27",
+      source: "Bioversity International"
+    },
+    {
+      id: 4,
+      title: "AI and Biology Conference Features Bayer Crop Science Innovation",
+      snippet: "Lyle Ralston, Crop Efficiency Platform Lead in Plant Biotechnology R&D at Bayer Crop Science, presents on synthetic biology applications.",
+      url: "https://www.syntheticbiologysummit.com/2026-speakers/lyle-ralston",
+      date: "2026-05-04",
+      source: "SynBioBeta"
+    },
+    {
+      id: 5,
+      title: "Bayer Crop Science Vietnam Expands Agricultural Solutions",
+      snippet: "Bayer's Crop Science Division in Vietnam offers comprehensive fungicides, herbicides & insecticides for enhanced crop protection and yield optimization.",
+      url: "https://www.bayer.com/en/vn/vietnam-home",
+      date: "2026-04-17",
+      source: "Bayer Global"
+    },
+    {
+      id: 6,
+      title: "Corteva Reveals Vylor as Seed and Genetics Spinoff Name",
+      snippet: "Industry news mentions Bayer's Crop Science Division's strategic plans to capitalize on emerging agricultural technologies and market opportunities.",
+      url: "https://www.facebook.com/SuccessfulFarmingUSA/posts/1583466843784678/",
+      date: "2026-05-04",
+      source: "Successful Farming"
+    }
+  ];
+
+  const [filteredArticles, setFilteredArticles] = useState(mockArticles);
+
+  useEffect(() => {
+    // Simulate API call delay
+    setLoading(true);
+    setTimeout(() => {
+      setFilteredArticles(mockArticles);
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  const handleSearch = () => {
+    setLoading(true);
+    setTimeout(() => {
+      const filtered = mockArticles.filter(article =>
+        article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        article.snippet.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredArticles(filtered);
+      setLoading(false);
+    }, 800);
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+  const getTimeFilterLabel = (filter) => {
+    const labels = {
+      'd1': 'Last 24 hours',
+      'd7': 'Last week',
+      'm1': 'Last month',
+      'y1': 'Last year'
+    };
+    return labels[filter] || 'All time';
+  };
+
+  return (
+    <div style={{
+      maxWidth: '1200px',
+      margin: '0 auto',
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif',
+      backgroundColor: '#f5f7fa'
+    }}>
+      {/* Header */}
+      <div style={{
+        background: 'linear-gradient(135deg, #00a651 0%, #007a3d 100%)',
+        color: 'white',
+        padding: '30px',
+        borderRadius: '12px',
+        marginBottom: '30px',
+        textAlign: 'center'
+      }}>
+        <h1 style={{ margin: '0 0 10px 0', fontSize: '2.5em', fontWeight: 'bold' }}>
+          🌱 Bayer Crop Science News
+        </h1>
+        <p style={{ margin: 0, fontSize: '1.1em', opacity: 0.9 }}>
+          Latest news and updates from Bayer's agricultural division
+        </p>
+      </div>
+
+      {/* Search Controls */}
+      <div style={{
+        backgroundColor: 'white',
+        padding: '25px',
+        borderRadius: '12px',
+        marginBottom: '25px',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+      }}>
+        <div style={{
+          display: 'flex',
+          gap: '15px',
+          alignItems: 'center',
+          flexWrap: 'wrap'
+        }}>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search news articles..."
+            style={{
+              flex: 1,
+              minWidth: '250px',
+              padding: '12px 16px',
+              border: '2px solid #e1e5e9',
+              borderRadius: '8px',
+              fontSize: '16px',
+              outline: 'none',
+              transition: 'border-color 0.3s'
+            }}
+            onFocus={(e) => e.target.style.borderColor = '#00a651'}
+            onBlur={(e) => e.target.style.borderColor = '#e1e5e9'}
+          />
+          
+          <select
+            value={timeFilter}
+            onChange={(e) => setTimeFilter(e.target.value)}
+            style={{
+              padding: '12px 16px',
+              border: '2px solid #e1e5e9',
+              borderRadius: '8px',
+              fontSize: '16px',
+              backgroundColor: 'white',
+              outline: 'none'
+            }}
+          >
+            <option value="d1">Last 24 hours</option>
+            <option value="d7">Last week</option>
+            <option value="m1">Last month</option>
+            <option value="y1">Last year</option>
+          </select>
+
+          <button
+            onClick={handleSearch}
+            disabled={loading}
+            style={{
+              padding: '12px 24px',
+              backgroundColor: loading ? '#ccc' : '#00a651',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              transition: 'background-color 0.3s'
+            }}
+          >
+            {loading ? '🔄 Searching...' : '🔍 Search'}
+          </button>
+        </div>
+      </div>
+
+      {/* Results Summary */}
+      <div style={{
+        backgroundColor: 'white',
+        padding: '15px 25px',
+        borderRadius: '8px',
+        marginBottom: '20px',
+        boxShadow: '0 1px 5px rgba(0,0,0,0.1)'
+      }}>
+        <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>
+          Found <strong>{filteredArticles.length}</strong> articles • Filter: <strong>{getTimeFilterLabel(timeFilter)}</strong>
+        </p>
+      </div>
+
+      {/* Loading State */}
+      {loading && (
+        <div style={{
+          textAlign: 'center',
+          padding: '50px',
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+        }}>
+          <div style={{ fontSize: '24px', marginBottom: '10px' }}>🔄</div>
+          <p style={{ color: '#666', margin: 0 }}>Searching for latest news...</p>
+        </div>
+      )}
+
+      {/* News Articles */}
+      {!loading && (
+        <div style={{ display: 'grid', gap: '20px' }}>
+          {filteredArticles.map((article) => (
+            <div
+              key={article.id}
+              style={{
+                backgroundColor: 'white',
+                padding: '25px',
+                borderRadius: '12px',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+              }}
+              onClick={() => window.open(article.url, '_blank')}
+            >
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                marginBottom: '15px'
+              }}>
+                <h3 style={{
+                  margin: 0,
+                  fontSize: '1.3em',
+                  color: '#2c3e50',
+                  lineHeight: '1.4',
+                  flex: 1
+                }}>
+                  {article.title}
+                </h3>
+                <span style={{
+                  backgroundColor: '#00a651',
+                  color: 'white',
+                  padding: '4px 12px',
+                  borderRadius: '20px',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  marginLeft: '15px',
+                  whiteSpace: 'nowrap'
+                }}>
+                  {formatDate(article.date)}
+                </span>
+              </div>
+              
+              <p style={{
+                color: '#666',
+                lineHeight: '1.6',
+                margin: '0 0 15px 0',
+                fontSize: '15px'
+              }}>
+                {article.snippet}
+              </p>
+              
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingTop: '15px',
+                borderTop: '1px solid #eee'
+              }}>
+                <span style={{
+                  color: '#00a651',
+                  fontSize: '14px',
+                  fontWeight: 'bold'
+                }}>
+                  📰 {article.source}
+                </span>
+                <span style={{
+                  color: '#00a651',
+                  fontSize: '14px',
+                  fontWeight: 'bold'
+                }}>
+                  Read more →
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* No Results */}
+      {!loading && filteredArticles.length === 0 && (
+        <div style={{
+          textAlign: 'center',
+          padding: '50px',
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+        }}>
+          <div style={{ fontSize: '48px', marginBottom: '20px' }}>📰</div>
+          <h3 style={{ color: '#666', margin: '0 0 10px 0' }}>No articles found</h3>
+          <p style={{ color: '#999', margin: 0 }}>
+            Try adjusting your search terms or time filter
+          </p>
+        </div>
+      )}
+
+      {/* Footer */}
+      <div style={{
+        textAlign: 'center',
+        padding: '30px 20px',
+        color: '#666',
+        fontSize: '14px'
+      }}>
+        <p style={{ margin: 0 }}>
+          🌱 Bayer Crop Science News Tracker • Built with React • Real-time agricultural news
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default BayerCropScienceNewsApp;
